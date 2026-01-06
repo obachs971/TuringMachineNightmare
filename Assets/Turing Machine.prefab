@@ -7632,6 +7632,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 30828fe928f70504db2ee4036d61885f, type: 2}
   - {fileID: 2100000, guid: 197e614d97c70ad43a5ee96fe4b3ae97, type: 2}
   - {fileID: 2100000, guid: 4778705d812ecb246bd96c14d5bf22be, type: 2}
+  - {fileID: 2100000, guid: 7cca6b7896d356340972fa99c430d8d3, type: 2}
   buttonSFX: {fileID: 8300000, guid: 9d27bb73ee5b27d46a9a70f0801aa2a4, type: 3}
   arrowSFX: {fileID: 8300000, guid: a74337469c87cd14c9e8c890c1936d70, type: 3}
   testingSFX: {fileID: 8300000, guid: e716eefd08a47c140845920dfd6913f5, type: 3}
