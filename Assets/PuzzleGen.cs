@@ -39,7 +39,10 @@ public class PuzzleGen
         { "2nd + 3rd, 1st + 3rd, 1st + 2nd", 62},
         { "|2nd - 3rd|, |1st - 3rd|, |1st - 2nd|", 63},
         { "3rd, 2nd, 1st", 64},
-        { "2, 3, 4, 5", 65}
+        { "2, 3, 4, 5", 65},
+        { "1st, 2nd", 66},
+        { "1st, 3rd", 67},
+        { "2nd, 3rd", 68},
     };
     private List<Clue> clues;
     private List<Clue> simpleClues;
@@ -109,21 +112,6 @@ public class PuzzleGen
     public int[] getSolution()
     {
         return solution;
-    }
-    private bool checker(List<Clue> selected)
-    {
-        if (selected.Count != numClues)
-            return false;
-        // Add in checker to see if a hard clue was added.
-        bool b1 = false, b2 = false;
-        foreach (Clue clue in selected)
-        {
-            if (specialClues.Contains(clue))
-                b1 = true;
-            if (hardClues.Contains(clue))
-                b2 = true;
-        }
-        return b1 && b2;
     }
     private void generateAllClues()
     {
@@ -250,8 +238,10 @@ public class PuzzleGen
             specialClues.Add(new Clue(new string[] { orders[i] }, new string[] { "=" }, new string[] { "0", "1" }, solution));
         //Consecutive Numbers
         specialClues.Add(new Clue(new string[] { "Consecutive Pairs" }, new string[] { "=" }, new string[] { "0", "1", "2" }, solution));
+        specialClues.Add(new Clue(new string[] { "Consecutive Pairs" }, new string[] { "/", "!/" }, new string[] { "2" }, solution));
         //Distinct Numbers
         specialClues.Add(new Clue(new string[] { "Distinct Numbers" }, new string[] { "=" }, new string[] { "1", "2", "3" }, solution));
+        specialClues.Add(new Clue(new string[] { "Distinct Numbers" }, new string[] { "/", "!/" }, new string[] { "2" }, solution));
         // Largest/Smallest
         specialClues.Add(new Clue(pos1, new string[] { ">" }, new string[] { pos2[2], pos2[1], pos2[0] }, solution));
         specialClues.Add(new Clue(pos1, new string[] { "<" }, new string[] { pos2[2], pos2[1], pos2[0] }, solution));
@@ -259,8 +249,10 @@ public class PuzzleGen
         specialClues.Add(new Clue(new string[] { "Evens" }, new string[] { "<", ">" }, new string[] { "Odds" }, solution));
         // Evens Equals Numbers
         specialClues.Add(new Clue(new string[] { "Evens" }, new string[] { "=" }, new string[] { "0", "1", "2", "3" }, solution));
+        specialClues.Add(new Clue(new string[] { "Evens" }, new string[] { "/", "!/" }, new string[] { "2" }, solution));
         // Odds Equals Number
         specialClues.Add(new Clue(new string[] { "Odds" }, new string[] { "=" }, new string[] { "0", "1", "2", "3" }, solution));
+        specialClues.Add(new Clue(new string[] { "Odds" }, new string[] { "/", "!/" }, new string[] { "2" }, solution));
         // Number of #s Equals to Numbers
         for (int i = 1; i <= 5; i++)
             specialClues.Add(new Clue(new string[] { i + "s" }, new string[] { "=" }, new string[] { "0", "1", "2", "3" }, solution));
@@ -280,6 +272,18 @@ public class PuzzleGen
         hardClues.Add(new Clue(pos1, new string[] { "/" }, new string[] { "2" }, solution));
         //Positions Not Divisible by 2
         hardClues.Add(new Clue(pos1, new string[] { "!/" }, new string[] { "2" }, solution));
+        //Position Equal To Positions
+        hardClues.Add(new Clue(new string[] { "1st" }, new string[] { "=" }, new string[] { "2nd", "3rd" }, solution));
+        hardClues.Add(new Clue(new string[] { "2nd" }, new string[] { "=" }, new string[] { "1st", "3rd" }, solution));
+        hardClues.Add(new Clue(new string[] { "3rd" }, new string[] { "=" }, new string[] { "1st", "2nd" }, solution));
+        //Position Less Than Positions
+        hardClues.Add(new Clue(new string[] { "1st" }, new string[] { "<" }, new string[] { "2nd", "3rd" }, solution));
+        hardClues.Add(new Clue(new string[] { "2nd" }, new string[] { "<" }, new string[] { "1st", "3rd" }, solution));
+        hardClues.Add(new Clue(new string[] { "3rd" }, new string[] { "<" }, new string[] { "1st", "2nd" }, solution));
+        //Position Greater Than Positions
+        hardClues.Add(new Clue(new string[] { "1st" }, new string[] { ">" }, new string[] { "2nd", "3rd" }, solution));
+        hardClues.Add(new Clue(new string[] { "2nd" }, new string[] { ">" }, new string[] { "1st", "3rd" }, solution));
+        hardClues.Add(new Clue(new string[] { "3rd" }, new string[] { ">" }, new string[] { "1st", "2nd" }, solution));
         // 2 Positions Less Than Number
         for (int i = 2; i <= 5; i++)
             hardClues.Add(new Clue(pos2, new string[] { "<" }, new string[] { i + "" }, solution));
@@ -358,56 +362,6 @@ public class PuzzleGen
         hardClues.Add(new Clue(new string[] { "1st + 2nd + 3rd" }, new string[] { "/" }, pos1, solution));
         hardClues.Add(new Clue(new string[] { "1st + 2nd + 3rd" }, new string[] { "!/" }, pos1, solution));
 
-    }
-
-    // Shuffles the clues and selects the clues until the amount of possible digits is 1
-    private List<Clue> selectCluesZ()
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            clues.Shuffle();
-            hardClues.Shuffle();
-            specialClues.Shuffle();
-        }
-        List<Clue> possClues = new List<Clue>();
-        possClues.AddRange(clues);
-        possClues.AddRange(clues);
-        for (int i = 0; i < 6; i++)
-        {
-            possClues.Insert(0, hardClues[i]);
-            possClues.Insert(0, specialClues[i]);
-        }
-        possClues.Shuffle();
-        // Add in the first 6 hard clues here
-
-        int index = 1;
-        List<int[]> possDigits = new List<int[]>();
-        for (int i = 1; i <= 5; i++)
-        {
-            for (int j = 1; j <= 5; j++)
-            {
-                for (int k = 1; k <= 5; k++)
-                {
-                    bool test = possClues[0].test(new int[] { i, j, k });
-                    if (test)
-                        possDigits.Add(new int[] { i, j, k });
-                }
-            }
-        }
-        while (possDigits.Count > 1)
-        {
-            for (int i = 0; i < possDigits.Count; i++)
-            {
-                bool test = possClues[index].test(possDigits[i]);
-                if (!test)
-                    possDigits.RemoveAt(i--);
-            }
-            index++;
-        }
-        List<Clue> selectedClues = new List<Clue>();
-        for (int i = 0; i < index; i++)
-            selectedClues.Add(possClues[i]);
-        return selectedClues;
     }
     private List<Clue> selectCluesUpgrade()
     {
