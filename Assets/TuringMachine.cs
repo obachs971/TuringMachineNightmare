@@ -304,7 +304,9 @@ public class TuringMachine : MonoBehaviour {
 								mainButton.OnInteract();
 							break;
 						case "SUBMIT":case "SUB":
-							if(submit.OnInteract != null)
+                            yield return "strike";
+                            yield return "solve";
+                            if (submit.OnInteract != null)
 								submit.OnInteract();
 							break;
 						
