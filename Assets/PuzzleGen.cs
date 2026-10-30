@@ -116,7 +116,7 @@ public class PuzzleGen
     private void generateAllClues()
     {
 
-        // Generic Clues
+        // Simple Clues
 
         // Position Compares Number
         string[] pos1 = { "1st", "2nd", "3rd" };
@@ -159,6 +159,9 @@ public class PuzzleGen
         // Position Compares 2 Positions
         for (int i = 0; i < 3; i++)
             simpleClues.Add(new Clue(new string[] { pos1[i] }, new string[] { "<", ">" }, new string[] { pos2[2 - i] }, solution));
+
+        // Normal Clues
+
         // 2 Sum Compares Number
         string[] sum2 = { "1st + 2nd", "1st + 3rd", "2nd + 3rd" };
         for (int i = 0; i < 3; i++)
@@ -185,7 +188,6 @@ public class PuzzleGen
             for (int j = 0; j < 3; j++)
                 clues.Add(new Clue(new string[] { sum2[i] }, new string[] { "/", "!/" }, new string[] { pos1[j] }, solution));
         }
-
         // 2 Difference Compares Number
         string[] dif2 = { "|1st - 2nd|", "|1st - 3rd|", "|2nd - 3rd|" };
         for (int i = 0; i < 3; i++)
@@ -227,6 +229,26 @@ public class PuzzleGen
         // 3 Sum Divisible by Position
         foreach (string pos in pos1)
             clues.Add(new Clue(new string[] { "1st + 2nd + 3rd" }, new string[] { "/", "!/" }, new string[] { pos }, solution));
+        // Number Divisible by Position
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 3; j <= 5; j++)
+                clues.Add(new Clue(new string[] { j + "" }, new string[] { "/", "!/" }, new string[] { pos1[i] }, solution));
+        }
+        // Numbers Divisible by Position
+        for (int i = 0; i < 3; i++)
+        {
+            clues.Add(new Clue(new string[] { "3", "4", "5" }, new string[] { "/" }, new string[] { pos1[i] }, solution));
+            clues.Add(new Clue(new string[] { "3", "4", "5" }, new string[] { "!/" }, new string[] { pos1[i] }, solution));
+        }
+        // Number Divisible by 2 Sum
+        for (int i = 0; i < 3; i++)
+        {
+            clues.Add(new Clue(new string[] { "8" }, new string[] { "/", "!/" }, new string[] { sum2[i] }, solution));
+            clues.Add(new Clue(new string[] { "10" }, new string[] { "/", "!/" }, new string[] { sum2[i] }, solution));
+            clues.Add(new Clue(new string[] { "12" }, new string[] { "/", "!/" }, new string[] { sum2[i] }, solution));
+            clues.Add(new Clue(new string[] { "15" }, new string[] { "/", "!/" }, new string[] { sum2[i] }, solution));
+        }
 
         //Special Clues
 
@@ -256,6 +278,9 @@ public class PuzzleGen
         // Number of #s Equals to Numbers
         for (int i = 1; i <= 5; i++)
             specialClues.Add(new Clue(new string[] { i + "s" }, new string[] { "=" }, new string[] { "0", "1", "2", "3" }, solution));
+        // Number Divisible by 3 Sum
+        specialClues.Add(new Clue(new string[] { "12" }, new string[] { "/", "!/" }, new string[] { "1st + 2nd + 3rd" }, solution));
+        specialClues.Add(new Clue(new string[] { "15" }, new string[] { "/", "!/" }, new string[] { "1st + 2nd + 3rd" }, solution));
 
         //Harder Clues
 
@@ -354,14 +379,26 @@ public class PuzzleGen
         // Positions Greater Than 2 Difference
         foreach (string dif in dif2)
             hardClues.Add(new Clue(pos1, new string[] { ">" }, new string[] { dif }, solution));
-
         //3 Sum Divisible by Numbers
         hardClues.Add(new Clue(new string[] { "1st + 2nd + 3rd" }, new string[] { "/" }, new string[] { "2", "3", "4", "5" }, solution));
         hardClues.Add(new Clue(new string[] { "1st + 2nd + 3rd" }, new string[] { "!/" }, new string[] { "2", "3", "4", "5" }, solution));
         //3 Sum Divisible by Positions
         hardClues.Add(new Clue(new string[] { "1st + 2nd + 3rd" }, new string[] { "/" }, pos1, solution));
         hardClues.Add(new Clue(new string[] { "1st + 2nd + 3rd" }, new string[] { "!/" }, pos1, solution));
-
+        // Number Divisible by Positions
+        for (int i = 3; i <= 5; i++)
+        {
+            hardClues.Add(new Clue(new string[] { i + "" }, new string[] { "/" }, pos1, solution));
+            hardClues.Add(new Clue(new string[] { i + "" }, new string[] { "!/" }, pos1, solution));
+        }
+        // Number Divisible by 2 Sums
+        for (int i = 8; i <= 12; i += 2)
+        {
+            hardClues.Add(new Clue(new string[] { i + "" }, new string[] { "/" }, sum2, solution));
+            hardClues.Add(new Clue(new string[] { i + "" }, new string[] { "!/" }, sum2, solution));
+        }
+        hardClues.Add(new Clue(new string[] { "15" }, new string[] { "/" }, sum2, solution));
+        hardClues.Add(new Clue(new string[] { "15" }, new string[] { "!/" }, sum2, solution));
     }
     private List<Clue> selectCluesUpgrade()
     {
